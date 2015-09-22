@@ -26,29 +26,6 @@ unsigned char FlagSynchRes=0;
 struct Aussaat DataAussaat[10];
 struct Melken MelkenNMC[30];
 
-void GW_Suche(void)
-{
-
-}
-
-void GW_SynchReq(unsigned char X)   // X=1 Iniciar Synch  X=2 Validar Synch
-{
-    unsigned char Data[1];
-    unsigned char FrID=0x00;
-
-    Data[0]=NdID;
-
-    switch(X)
-    {
-        case 1:
-        XBAPI_Tx(Data,0x01,FrID,0x04,0xC8,AdrsBroadcast,AdrsMyAdrs,AdrsBroadcast);
-        break;
-
-        case 2:
-        XBAPI_Tx(Data,0x01,FrID,0x00,0xC8,AdrsGW,AdrsMyAdrs,AdrsGW);
-        break;
-    }
-}
 
 void GB_Melken(unsigned char Data[])
 {

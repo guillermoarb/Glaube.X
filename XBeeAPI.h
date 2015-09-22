@@ -38,20 +38,20 @@
 #define XBAPI_DataSt    BufferRxXBAPI[14]
 
 //Definición de variables
-extern unsigned int Length;
-extern unsigned char ApiID;
-extern unsigned char ApiOp;
-extern unsigned char iRx1XBAPI;
-extern unsigned int PaqXBAPILen;
-extern unsigned int NoPaqXBAPI;
+extern unsigned int 	Length;
+extern unsigned char 	ApiID;
+extern unsigned char 	ApiOp;
+extern unsigned char 	iRx1XBAPI;
+extern unsigned int 	PaqXBAPILen;
+extern unsigned int 	NoPaqXBAPI;
 
 //Variables manejo de puerto serial
-extern unsigned char FlagPaqRx2=0;
-extern unsigned char BufferRxUART[127];
+extern unsigned char 	FlagPaqRx2=0;
+extern unsigned char 	BufferRxUART[127];
 
 //Variables comandos AT
-extern unsigned char Pmtr[32];  //Parametro para comando AT
-extern unsigned char AT_Resp;
+extern unsigned char 	Pmtr[32];  //Parametro para comando AT
+extern unsigned char 	AT_Resp;
 
 
 //Definición de funciones

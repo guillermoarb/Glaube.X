@@ -27,26 +27,6 @@ void Sekunde();
 
 
 
-//unsigned char i=0;
-
-//Flags
-//unsigned char Timer0Flag=0;
-//unsigned int Load=0;
-
-
-//Variables GLAUBE
-//extern unsigned char BufferRxUART[127];
-//unsigned char iRx1XBAPI=0;
-//unsigned int PaqXBAPILen=0;
-//unsigned int NoPaqXBAPI=0;
-
-
-
-//variables TGS8100
-//unsigned char TGS_Q=0;  // Zähler zu TGS8100 Welle
-//unsigned char TGS_WS=0; // Status von TGS8100 Welle
-
-
 void main() {
 
     FlagPaqRx2=0;
@@ -151,7 +131,7 @@ void SetupInit()  //Función para inicialización de sensores
     SetupPorts();
     Setup_USART2XBAPI();
     SetupTimer0(1,0);
-    //INTERRUPT_Initialize();
+    INTERRUPT_Initialize();
     //SetupTimerVOC();
     //InitVOC();
     //Init_ADC_AirQ();

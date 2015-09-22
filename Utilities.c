@@ -8,10 +8,8 @@ unsigned int Load=0;
 
 void TMR0_Glaube_ISR()
 {
-    //Timer 0 Interrupción
-    
         Timer0Flag=1;
-        //PORTCbits.RC3 = !PORTCbits.RC3;
+        PORTCbits.RC3 = !PORTCbits.RC3;
 
         Sekunde();
         WriteTimer0(Load);    //0.001 Seg. FOSC 32 MHz

@@ -74,7 +74,29 @@ unsigned int NoPaqXBAPI=0;
 
 void UART_XBeeAPI_ISR(void)
 {
+        BufferRxUART[iRx1XBAPI] = Read2USART();
 
+        if (iRx1XBAPI == 2) // Se recive suficiente información para determinar la longitud del paquete
+            if (BufferRxUART[0] == XBAPI_StrDel) //Identificacion de un paquete API XBee
+                PaqXBAPILen = Make16(BufferRxUART[1], BufferRxUART[2]); //Se obtiene la longitud del paquete esperado
+
+        //Terminación por longitud de paquete esperado
+        if (iRx1XBAPI == PaqXBAPILen + 3) //Si se ha alcanzado el final del paquete esperado
+        {
+            iRx1XBAPI = 0; //Se cierra el paquete
+            NoPaqXBAPI++; //Se aumenta el contador de paquetes recividos
+            FlagPaqRx2 = 1; //Se habilita bandera de nuevo paquete
+
+
+            PIR3bits.RC2IF = 0;   //Experimental
+
+            NewPackUART(PaqXBAPILen);  //PaqXBAPILen = Longitud de paquete - Start Delimiter - Length Bytes - Check Sum
+            //FlagBufferRx1Full=0;      //Se deshabilita bandera de buffer Rx lleno
+            return;
+        }
+
+        iRx1XBAPI++;
+        PIR3bits.RC2IF = 0; // clear rx flag
 }
 
 

@@ -31,6 +31,7 @@ void interrupt ISR() //Rutinas de interrupción
     if (USART2_PIR && USART2_PIE) //Nombres definidos en XBeeAPI.h
     {
         UART_XBeeAPI_ISR();
+        PIR3bits.RC2IF = 0;
 
     }
 

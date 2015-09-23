@@ -44,6 +44,12 @@ void GB_Melken(unsigned char Data[], unsigned char GB_Len)
         AdrsReiseziel[i]=Data[i+ReisezielPos];
     }
 
+    for(unsigned char i=0; i < (GB_Len-28) ;i++)          //27 Es la longitud de paquete recivida + 4 (API Extra) - 31 (Glaube y API Extra)
+    {
+        GlaubeOut[i]=Data[i+ GB_Data_Pos];
+    }
+
+
 
 
 
@@ -70,9 +76,9 @@ void GB_Melken(unsigned char Data[], unsigned char GB_Len)
             break;
 
         case 0x10: //General Glaube data
-            XBAPI_Tx(AdrsAbsender,8,0x01,0x01,0x10,AdrsP2P,AdrsDummy,AdrsDummy);
-            XBAPI_Tx(AdrsHerkunft,8,0x01,0x01,0x7B,AdrsP2P,AdrsDummy,AdrsDummy);
-            XBAPI_Tx(AdrsReiseziel,8,0x01,0x01,0x7B,AdrsP2P,AdrsDummy,AdrsDummy);
+            XBAPI_Tx(GlaubeOut,(GB_Len-28),0x01,0x01,0x10,AdrsP2P,AdrsDummy,AdrsDummy);
+            //XBAPI_Tx(AdrsHerkunft,8,0x01,0x01,0x7B,AdrsP2P,AdrsDummy,AdrsDummy);
+            //XBAPI_Tx(AdrsReiseziel,8,0x01,0x01,0x7B,AdrsP2P,AdrsDummy,AdrsDummy);
         break;
 
     }

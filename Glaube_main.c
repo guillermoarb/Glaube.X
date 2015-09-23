@@ -38,9 +38,13 @@ void main() {
 
     while(1)
     {
-        //GetMyAdrs();
-        //XBAPI_Tx(CL_ID,1,0x01,0x01,0x58,AdrsGW,AdrsMyAdrs,AdrsGW);  //eJEMPLO DE FUNCIÓN PARA ENVIAR EN MODO API
 
+        if(FlagPaqRx2==1)
+        {
+           NewPackUART(PaqXBAPILen);
+           FlagPaqRx2=0;
+        }
+        
     }
 }
 

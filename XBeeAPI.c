@@ -15,7 +15,7 @@ unsigned char AT_Resp=0xFF;
 
 //VARIABLES GLOBALES
 unsigned char BufferRxUART[127];
-unsigned char FlagPaqRx2;
+unsigned char FlagPaqRx2=0;
 unsigned char iRx1XBAPI=0;
 unsigned int PaqXBAPILen=0;
 unsigned int NoPaqXBAPI=0;
@@ -37,11 +37,13 @@ void UART_XBeeAPI_ISR(void)
             FlagPaqRx2 = 1; //Se habilita bandera de nuevo paquete
 
 
-            PIR3bits.RC2IF = 0;   //Experimental
+            //PIR3bits.RC2IF = 0;   //Experimental
 
             NewPackUART(PaqXBAPILen);  //PaqXBAPILen = Longitud de paquete - Start Delimiter - Length Bytes - Check Sum
             //FlagBufferRx1Full=0;      //Se deshabilita bandera de buffer Rx lleno
-            return;
+            
+           
+            return ;
         }
 
         iRx1XBAPI++;
@@ -344,7 +346,7 @@ void NewPackUART(unsigned int RxLen)
             if(BufferRxUART[3] == 0x80)  //Paquete Rx normal
             {
 
-              GB_Melken(BufferRxUART);
+              GB_Melken(BufferRxUART,RxLen);
 
             }
 

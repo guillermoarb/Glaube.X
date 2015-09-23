@@ -24,8 +24,6 @@
 #define XBAPI_StrDel        0x7E        //Delimitador de inicio en modo API de XBee
 #define XBAPI_Rx64ID        0x80        //Rx API Identifier
 
-
-
 //Posiciones estandar en Buffer para trama API
 //#define XBAPI_Start     BufferRxXBAPI[0]
 //#define XBAPI_LenMSB    BufferRxXBAPI[1]
@@ -46,8 +44,9 @@ extern unsigned int 	PaqXBAPILen;
 extern unsigned int 	NoPaqXBAPI;
 
 //Variables manejo de puerto serial
-extern unsigned char 	FlagPaqRx2=0;
-extern unsigned char 	BufferRxUART[127];
+extern unsigned char 	FlagPaqRx2;
+extern unsigned char 	BufferRxUART[127];		//Vector donde es descargada la información cruda del puerto serial
+
 
 //Variables comandos AT
 extern unsigned char 	Pmtr[32];  //Parametro para comando AT

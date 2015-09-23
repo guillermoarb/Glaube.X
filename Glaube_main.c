@@ -4,7 +4,7 @@
 #include <xc.h>
 #include "config.h"
 #include <stdio.h>
-#include <math.h>
+//#include <math.h>
 #include <plib/timers.h>
 #include <plib/usart.h>
 #include <plib/adc.h>

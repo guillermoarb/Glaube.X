@@ -77,7 +77,7 @@ void SetCH(unsigned char CH[]);
 void AES_EE(unsigned char AES_Sts);         //1-Enable AES 0- Disable AES
 void XBAPI_WR(void);
 void Wait4AT_Resp(unsigned char Resp); //Espera por respuesta de comando AT API
-void UART_XBeeAPI_ISR(void);
+void UART_XBeeAPI_ISR(void);	
 
 
 

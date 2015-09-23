@@ -30,7 +30,7 @@ void UART_XBeeAPI_ISR(void)
                 PaqXBAPILen = Make16(BufferRxUART[1], BufferRxUART[2]); //Se obtiene la longitud del paquete esperado
 
         //Terminación por longitud de paquete esperado
-        if (iRx1XBAPI == PaqXBAPILen + 3) //Si se ha alcanzado el final del paquete esperado
+        if (iRx1XBAPI >= PaqXBAPILen + 3) //Si se ha alcanzado el final del paquete esperado
         {
             iRx1XBAPI = 0; //Se cierra el paquete
             NoPaqXBAPI++; //Se aumenta el contador de paquetes recividos
@@ -39,7 +39,7 @@ void UART_XBeeAPI_ISR(void)
 
             //PIR3bits.RC2IF = 0;   //Experimental
 
-            NewPackUART(PaqXBAPILen);  //PaqXBAPILen = Longitud de paquete - Start Delimiter - Length Bytes - Check Sum
+            //NewPackUART(PaqXBAPILen);  //PaqXBAPILen = Longitud de paquete - Start Delimiter - Length Bytes - Check Sum
             //FlagBufferRx1Full=0;      //Se deshabilita bandera de buffer Rx lleno
             
            
@@ -47,7 +47,8 @@ void UART_XBeeAPI_ISR(void)
         }
 
         iRx1XBAPI++;
-        PIR3bits.RC2IF = 0; // clear rx flag
+        //PIR3bits.RC2IF = 0; // clear rx flag
+
 }
 
 

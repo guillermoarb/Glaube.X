@@ -4,7 +4,7 @@
 #include <xc.h>
 #include "config.h"
 #include <stdio.h>
-#include <math.h>
+//#include <math.h>
 #include <plib/timers.h>
 #include <plib/usart.h>
 #include <plib/adc.h>
@@ -27,26 +27,6 @@ void Sekunde();
 
 
 
-//unsigned char i=0;
-
-//Flags
-//unsigned char Timer0Flag=0;
-//unsigned int Load=0;
-
-
-//Variables GLAUBE
-//extern unsigned char BufferRxUART[127];
-//unsigned char iRx1XBAPI=0;
-//unsigned int PaqXBAPILen=0;
-//unsigned int NoPaqXBAPI=0;
-
-
-
-//variables TGS8100
-//unsigned char TGS_Q=0;  // Zähler zu TGS8100 Welle
-//unsigned char TGS_WS=0; // Status von TGS8100 Welle
-
-
 void main() {
 
     FlagPaqRx2=0;
@@ -66,54 +46,7 @@ void main() {
 
 
 
-//void interrupt ISR()  //Rutinas de interrupción
-//{
-//    //Timer 0 Interrupción
-//    if(INTCONbits.TMR0IF == 1)
-//    {
-//        Timer0Flag=1;
-//        PORTCbits.RC3 = !PORTCbits.RC3;
-//
-//        Sekunde();
-//        WriteTimer0(Load);    //0.001 Seg. FOSC 32 MHz
-//        INTCONbits.TMR0IF = 0;
-//
-//    }
-//
-//
-//
-//    //UART2 Interrupción
-////        if (USART2_PIR && USART2_PIE) //Nombres definidos en XBeeAPI.h
-//    {
-//        BufferRxUART[iRx1XBAPI] = Read2USART();
-//
-//        if (iRx1XBAPI == 2) // Se recive suficiente información para determinar la longitud del paquete
-//            if (BufferRxUART[0] == XBAPI_StrDel) //Identificacion de un paquete API XBee
-//                PaqXBAPILen = Make16(BufferRxUART[1], BufferRxUART[2]); //Se obtiene la longitud del paquete esperado
-//
-//        //Terminación por longitud de paquete esperado
-//        if (iRx1XBAPI == PaqXBAPILen + 3) //Si se ha alcanzado el final del paquete esperado
-//        {
-//            iRx1XBAPI = 0; //Se cierra el paquete
-//            NoPaqXBAPI++; //Se aumenta el contador de paquetes recividos
-//            FlagPaqRx2 = 1; //Se habilita bandera de nuevo paquete
-//
-//
-//            PIR3bits.RC2IF = 0;   //Experimental
-//
-//            NewPackUART(PaqXBAPILen);  //PaqXBAPILen = Longitud de paquete - Start Delimiter - Length Bytes - Check Sum
-//            //FlagBufferRx1Full=0;      //Se deshabilita bandera de buffer Rx lleno
-//            return;
-//        }
-//
-//        iRx1XBAPI++;
-//        PIR3bits.RC2IF = 0; // clear rx flag
-//
-//
-//    }
-//
-//
-//}
+
 
 
 
@@ -151,11 +84,7 @@ void SetupInit()  //Función para inicialización de sensores
     SetupPorts();
     Setup_USART2XBAPI();
     SetupTimer0(1,0);
-    //INTERRUPT_Initialize();
-    //SetupTimerVOC();
-    //InitVOC();
-    //Init_ADC_AirQ();
-    //LedInitialiserung();
+    INTERRUPT_Initialize();
 
 
     PEIE = 1; //Enable pheripheral interrupt serial port is a pheripheral)

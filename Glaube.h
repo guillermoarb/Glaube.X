@@ -18,6 +18,7 @@ extern "C" {
 #define HerkunftPos 14
 #define ReisezielPos 22
 #define GB_ID_Pos 30
+#define GB_Data_Pos 31
 
 //Posiciones Paquete Synch
 #define CL_ID_Pos 31
@@ -68,11 +69,26 @@ extern unsigned char NdID;          //Identificador para tipo de dispositvo
 extern unsigned char FlagSynchRes; // 0.- No sincronizado ... 1.- Solicitud de sincornización
 
 //Variables de Ordeña
-extern unsigned char RSSI;
+extern unsigned char    RSSI;
+extern unsigned char    GlaubeOut[80];          //Vector donde es descargada la información para capas superiores.
 
 
 //Funciones
-void GB_Melken(unsigned char Data[]);
+void GB_Melken(unsigned char Data[], unsigned char GB_Len);
+/**
+ * @Param
+    Data[]  Cadena de información recivida por el puerto serial
+    Len     Longitud de la cadena recivida
+ * @Returns
+    none
+ * @Descripción
+    Función para ordeña de paquete recivido por puerto serial de acuerdo a protocolo glaube.
+ * @Example
+    GB_Melken(BufferRx,RxLen);
+
+    Donde BufferRx es el vector donde se almaceno la información recivda por el puerto serial y Rx Len la longitud de dicha información.
+ */
+
 void GW_Suche(void);
 void GW_SynchReq(unsigned char X);
 void GB_Init(void);                         //Inicialización de Glaube

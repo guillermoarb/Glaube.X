@@ -26,31 +26,11 @@ unsigned char FlagSynchRes=0;
 struct Aussaat DataAussaat[10];
 struct Melken MelkenNMC[30];
 
-void GW_Suche(void)
-{
+// Variables de ordeña
+unsigned char    GlaubeOut[80]={0};
 
-}
 
-void GW_SynchReq(unsigned char X)   // X=1 Iniciar Synch  X=2 Validar Synch
-{
-    unsigned char Data[1];
-    unsigned char FrID=0x00;
-
-    Data[0]=NdID;
-
-    switch(X)
-    {
-        case 1:
-        XBAPI_Tx(Data,0x01,FrID,0x04,0xC8,AdrsBroadcast,AdrsMyAdrs,AdrsBroadcast);
-        break;
-
-        case 2:
-        XBAPI_Tx(Data,0x01,FrID,0x00,0xC8,AdrsGW,AdrsMyAdrs,AdrsGW);
-        break;
-    }
-}
-
-void GB_Melken(unsigned char Data[])
+void GB_Melken(unsigned char Data[], unsigned char GB_Len)
 {
 
 
@@ -64,31 +44,36 @@ void GB_Melken(unsigned char Data[])
         AdrsReiseziel[i]=Data[i+ReisezielPos];
     }
 
-    XBAPI_Tx(AdrsAbsender,8,0x01,0x01,0x10,AdrsP2P,AdrsDummy,AdrsDummy);
-    XBAPI_Tx(AdrsHerkunft,8,0x01,0x01,0x7B,AdrsP2P,AdrsDummy,AdrsDummy);
-    XBAPI_Tx(AdrsReiseziel,8,0x01,0x01,0x7B,AdrsP2P,AdrsDummy,AdrsDummy);
 
 
+
+    //Glaube cases
     switch (Data[GB_ID_Pos])
     {
-        case 0x58:  //GW2NMC_Synch
+        case 0x58:  //GW2NMC_Synch Identificador para paquete de sincronización.
 
             for(unsigned char i=0;i<16;i++)
             {
                 AES_KEY[i]=Data[i+AES_KEY_Pos];  //Adquisición de AES KEY
             }
 
-            PAN_ID[0]=Data[PAN_ID_Pos];         //Adquisición de PAN ID 1º byte
-            PAN_ID[1]=Data[PAN_ID_Pos+1];       //Adquisición de PAN ID 2º byte
-            CL_ID[0]= Data[CL_ID_Pos];             //Adquisición de cluster id asignado
-            CH[0]=Data[CH_Pos];                    //Adquisición de canal asignado en sincronización
+            PAN_ID[0]=Data[PAN_ID_Pos];             //Adquisición de PAN ID 1º byte
+            PAN_ID[1]=Data[PAN_ID_Pos+1];           //Adquisición de PAN ID 2º byte
+            CL_ID[0]= Data[CL_ID_Pos];              //Adquisición de cluster id asignado
+            CH[0]=Data[CH_Pos];                     //Adquisición de canal asignado en sincronización
 
-            for(unsigned char i=0;i<8;i++)      //Adquisición de dirección del GW
+            for(unsigned char i=0;i<8;i++)          //Adquisición de dirección del GW
                 AdrsGW[i]=Data[i+AbsenderPos];
 
             FlagSynchRes=1;
 
             break;
+
+        case 0x10: //General Glaube data
+            XBAPI_Tx(AdrsAbsender,8,0x01,0x01,0x10,AdrsP2P,AdrsDummy,AdrsDummy);
+            XBAPI_Tx(AdrsHerkunft,8,0x01,0x01,0x7B,AdrsP2P,AdrsDummy,AdrsDummy);
+            XBAPI_Tx(AdrsReiseziel,8,0x01,0x01,0x7B,AdrsP2P,AdrsDummy,AdrsDummy);
+        break;
 
     }
 

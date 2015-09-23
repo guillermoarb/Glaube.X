@@ -15,66 +15,39 @@ unsigned char AT_Resp=0xFF;
 
 //VARIABLES GLOBALES
 unsigned char BufferRxUART[127];
-unsigned char FlagPaqRx2;
+unsigned char FlagPaqRx2=0;
 unsigned char iRx1XBAPI=0;
 unsigned int PaqXBAPILen=0;
 unsigned int NoPaqXBAPI=0;
 
-//void XBAPI_PaqRepEcho(char Term, unsigned char Buffer[])
-//{
-//    unsigned char PaqXBAPILen;
-//    PaqXBAPILen=Make16(Buffer[1],Buffer[2]);
-//
-//    printf("\r\nNuevo paquete recibido\r\n");
-//    printf("ID: %X\r\n",Buffer[0]);
-//    printf("Longitud (Bytes):%u 0x%X\r\n",PaqXBAPILen);
-//    printf("Tipo de paquete: %X\r\n",Buffer[3]);
-//
-//    printf("Dirección de destino inmediato: \r\n");
-//    for(char iAdrsSou=0;iAdrsSou<8;iAdrsSou++)
-//        printf("0x%X ",*(&Buffer[4]+iAdrsSou));
-//
-//
-//    printf("\r\nPotencia: -%u dBm\r\n",Buffer[12]);
-//    printf("Opciones: 0x%X\r\n",Buffer[13]);
-//
-//    printf("Data Payload (MSDU): \r\n");
-//    for(char iDat=0;iDat<PaqXBAPILen-11;iDat++)
-//        printf("%c",*(&Buffer[14]+iDat));
-//}
-
-//void XBAPI_Rx(unsigned char Data[])  //Datun Melken
-//{
-//    unsigned int  LengthRx;
-//    unsigned char API_ID;
-//    unsigned char RSSI;
-//    unsigned char Options;
-//    unsigned char AdrsRemInd[8];
-//    unsigned char RF_Data[100];
-//
-//    //unsigned char AdrsDesInm2[8]={0x00,0x13,0xA2,0x00,0x40,0x8D,0x92,0x60};
-//    unsigned char AdrsDesInm2[8]={0x00,0x13,0xA2,0x00,0x40,0xA7,0x11,0xF5};
-//
-//    LengthRx=Make16(Data[1],Data[2]);
-//    API_ID=Data[3];
-//    RSSI=Data[12];
-//    Options=Data[13];
-//
-//
-//    for(unsigned char i=0;i<8;i++)
-//        AdrsRemInd[i]=Data[i+4];
-//
-//    for(unsigned int i=0;i<LengthRx-11;i++)
-//        RF_Data[i]=Data[i+14];
-//
-//    XBAPI_Tx(RF_Data,LengthRx-11,0x01,0x01,0x58,AdrsDesInm2,AdrsDesInm2,AdrsDesInm2);
-//
-//   // EnMaSyNeuPaket(Data);
-//}
 
 void UART_XBeeAPI_ISR(void)
 {
+        BufferRxUART[iRx1XBAPI] = Read2USART();
 
+        if (iRx1XBAPI == 2) // Se recive suficiente información para determinar la longitud del paquete
+            if (BufferRxUART[0] == XBAPI_StrDel) //Identificacion de un paquete API XBee
+                PaqXBAPILen = Make16(BufferRxUART[1], BufferRxUART[2]); //Se obtiene la longitud del paquete esperado
+
+        //Terminación por longitud de paquete esperado
+        if (iRx1XBAPI == PaqXBAPILen + 3) //Si se ha alcanzado el final del paquete esperado
+        {
+            iRx1XBAPI = 0; //Se cierra el paquete
+            NoPaqXBAPI++; //Se aumenta el contador de paquetes recividos
+            FlagPaqRx2 = 1; //Se habilita bandera de nuevo paquete
+
+
+            //PIR3bits.RC2IF = 0;   //Experimental
+
+            NewPackUART(PaqXBAPILen);  //PaqXBAPILen = Longitud de paquete - Start Delimiter - Length Bytes - Check Sum
+            //FlagBufferRx1Full=0;      //Se deshabilita bandera de buffer Rx lleno
+            
+           
+            return ;
+        }
+
+        iRx1XBAPI++;
+        PIR3bits.RC2IF = 0; // clear rx flag
 }
 
 
@@ -145,30 +118,7 @@ char Make8(int Var, int NoByte)
     return Maked8;
 }
 
-//void Setup_USART2XBAPI()
-//{
-//    //Declaración de Variables
-//    unsigned char USART2Config=0;
-//    unsigned int BaudRate=0;
-//
-//    TRISBbits.RB6=0;        //TX es salida   //cambiar estos son de USAR1
-//    TRISBbits.RB7=1;        //RX es entrada
-//
-//    //Configuración USART
-//    USART2Config=USART_TX_INT_OFF   //Interrupcion por Ttransmisión: Off
-//            &USART_RX_INT_OFF       //Interrupcion por Recepción: Off
-//            &USART_ASYNCH_MODE      //Modo Asíncrono
-//            &USART_EIGHT_BIT        //Transmision de 8bits
-//            &USART_CONT_RX          //Recepción Continua
-//            &USART_BRGH_HIGH        //Baudios
-//            &USART_ADDEN_OFF;       //Detección de Dirección OFF
-//    BaudRate=51;            //Valor que se carga a SPRBH para Definir BaudRate = 9600
-//    Close2USART();          //Cierra USART2 en caso de estar previamente abierto.
-//    Open2USART(USART2Config, BaudRate); //Abre USART2
-//    IPR3bits.RC2IP=1;       //Receive Interrupt: High Priority
-//    PIE3bits.RC2IE=1;       //Receive Interrupt: Enabled
-//    PIR3bits.RC2IF=0;       //Reset de EUSART2 Receive Interrupt Flag
-//}
+
 
 void Setup_USART1XBAPI()
 {
@@ -396,7 +346,7 @@ void NewPackUART(unsigned int RxLen)
             if(BufferRxUART[3] == 0x80)  //Paquete Rx normal
             {
 
-              GB_Melken(BufferRxUART);
+              GB_Melken(BufferRxUART,RxLen);
 
             }
 
